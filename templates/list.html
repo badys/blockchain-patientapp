@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% for patient in patients %}
+
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <small class="text-muted">Last modified: {{ patient.date_modified }}</small>
+        </div>
+        <h2>
+            <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ patient.id }}">{{ patient.name }} {{ patient.surname }}</a>
+            <a href="edit?id={{ patient.id }}" class="fas fa-edit" style="float: right;"></a>
+        </h2>
+        <div id="data{{ patient.id }}" class="collapse">
+            <p class="article-content">Pesel: {{ patient.pesel }} </p>
+            <p class="article-content">Date of admission: {{ patient.date_admission }}</p>
+            <p class="article-content">Doctors prescription: {{ patient.info }}</p>
+        </div>
+    </div>
+</article>
+{% endfor %}
+{% endblock content %}

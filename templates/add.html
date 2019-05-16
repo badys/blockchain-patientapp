@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<form action="/add" method="POST">
+    <article class="media content-section">
+        <div class="media-body row" style="margin:auto;">
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_name">First name</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" name="firstname" required id="id_name">
+                </div>
+            </div>
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_surname">Surname</label>
+                </div>
+                <div class="col-md-7" style="padding-right: 10px;">
+                    <input type="text" name="surname" required id="id_surname">
+                </div>
+            </div>
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_pesel">PESEL</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="number" name="pesel" required id="id_pesel">
+                </div>
+            </div>
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_date_admission">Admission date</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" onfocus="(this.type='date')" name="date_admission" value="" required id="id_date_admission">
+                </div>
+            </div>
+            <div class="col-md-12 row" style="margin-bottom: 5px;">
+                <div class="col-md-12">
+                    <label for="id_info">Doctors prescription</label>
+                </div>
+                <div class="col-md-12">
+                    <textarea name="info" cols="100" rows="5" style="resize:none; width:100%" required id="id_info"></textarea>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-md-12">
+                <div class="col-md-6" style="float:right; text-align: right; padding-right:30px">
+                    <button type="submit">Add Patient</button>
+                </div>
+                <div class="col-md-6" style="float:left; padding-left: 0;">
+                    <button type="reset">Clear</button>
+                </div>
+            </div>
+        </div>
+    </article>
+</form>
+
+{% endblock content %}
