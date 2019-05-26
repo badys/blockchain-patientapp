@@ -1,73 +1,84 @@
 from flask import Flask, render_template, url_for, request, redirect
 from time import gmtime, strftime
+from web3 import Web3
+from web3.middleware import geth_poa_middleware
+import json
 
 app = Flask(__name__)
 
-patients = [
-    {
-    'id': 1,
-    'uuid': 'xxx',
-    'name': 'Patient',
-    'surname': 'First',
-    'pesel': '93021548556',
-    'date_admission': '2017-02-18',
-    'info': 'Double Cancer',
-    'date_modified': '2017-02-18 12:00'
-    },
-    {
-    'id': 2,
-    'uuid': 'xxx',
-    'name': 'Patient',
-    'surname': 'Third',
-    'pesel': '93021548556',
-    'date_admission': '2018-02-08',
-    'info': 'Cancer',
-    'date_modified': '2017-05-02 12:00'
-    }
-]
+
+def connect_to_blockchain():
+    # web3 instance
+    w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
+    w3.middleware_stack.inject(geth_poa_middleware, layer=0)
+    w3.eth.defaultAccount = w3.eth.accounts[0]
+    docmed = w3.eth.contract(address=ADDRESS, abi=ABI)
+    return w3, docmed
+
+
+def read_all_patients():
+    patients = []
+    for i in range(docmed.functions.getPatientsNo().call()):
+        patients.append(jsonifyPatient(docmed.functions.patients(docmed.functions.patientIds(i).call()).call()))
+    return patients
+
+
+def jsonifyPatient(patient):
+    return {"wallet": patient[0], "pesel": patient[1], "firstname": patient[2], "lastname": patient[3],
+            "resNo": patient[4], "inHospital": patient[5], "residances": {}}
+
+
+def read_all_doctors():
+    doctors = []
+    for i in range(docmed.functions.getDoctorsNo().call()):
+        doctors.append(jsonifyDoctor(docmed.functions.doctors(docmed.functions.doctorIds(i).call()).call()))
+    return doctors
+
+
+def jsonifyDoctor(doctor):
+    return {"wallet": doctor[0], "doctorNPWZ": doctor[1], "firstname": doctor[2], "lastname": doctor[3]}
+
 
 @app.route("/")
 def list():
-    return render_template('list.html', patients=patients)
+    return render_template('list.html', patients=read_all_patients(), doctors=read_all_doctors())
+
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='about')
 
-@app.route("/add", methods=['GET'])
-def add_form():
-    return render_template('add.html', title='add patient')
 
-@app.route("/add", methods=['POST'])
-def add():
+@app.route("/patient/add", methods=['GET'])
+def patient_add_form():
+    return render_template('addPatient.html', title='add patient')
+
+
+@app.route("/patient/add", methods=['POST'])
+def patient_add():
     form = request.form
-    patient = {}
-    mapPatient(patient, form, patients[-1]['id'] + 1)
-    patients.append(patient)
+    w3.eth.waitForTransactionReceipt(docmed.functions.registerPatient(form['pesel'], form['firstname'], form['surname']).transact())
     return redirect("/")
 
-@app.route("/edit", methods=['GET'])
-def edit_form():
-    id = request.args.get('id', default = 1, type = int)
-    form = patients[id-1]
-    return render_template('edit.html', title='edit patient', form=form)
 
-@app.route("/edit", methods=['POST'])
-def edit():
+@app.route("/doctor/add", methods=['GET'])
+def doctor_add_form():
+    return render_template('addDoctor.html', title='add patient')
+
+
+@app.route("/doctor/add", methods=['POST'])
+def doctor_add():
     form = request.form
-    for index, item in enumerate(patients):
-        if item['id'] == int(form['id']):
-            mapPatient(item, form, item['id'])
+    w3.eth.waitForTransactionReceipt(docmed.functions.registerDoctor(w3.eth.accounts[0], int(form['npwz']), form['firstname'], form['surname']).transact())
     return redirect("/")
 
-def mapPatient(patient, form, id):
-    patient['id'] = id
-    patient['uuid'] = 'xxx'
-    patient['name'] = form['firstname']
-    patient['surname'] = form['surname']
-    patient['pesel'] = form['pesel']
-    patient['date_admission'] = form['date_admission']
-    patient['info'] = form['info']
-    patient['date_modified'] = strftime("%Y-%m-%d %H:%M", gmtime())
+
+with open("data.json", 'r') as f:
+    data = json.load(f)
+    ABI = data["abi"]
+    ADDRESS = data["address"]
+
+#Connecting to blockchain
+w3, docmed = connect_to_blockchain()
 
 app.run(debug=True, host='127.0.0.1', port=5000)

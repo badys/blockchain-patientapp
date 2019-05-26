@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<form action="/doctor/add" method="POST">
+    <article class="media content-section">
+        <div class="media-body row" style="margin:auto;">
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_name">First name</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" name="firstname" required id="id_name">
+                </div>
+            </div>
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_surname">Surname</label>
+                </div>
+                <div class="col-md-7" style="padding-right: 10px;">
+                    <input type="text" name="surname" required id="id_surname">
+                </div>
+            </div>
+            <div class="col-md-6 row" style="margin-bottom: 5px;">
+                <div class="col-md-5">
+                    <label for="id_npwz">NPWZ</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" name="npwz" required id="id_npwz">
+                </div>
+            </div>
+            <!-- Buttons -->
+            <div class="col-md-12">
+                <div class="col-md-6" style="float:right;">
+                    <button type="submit">Add Doctor</button>
+                </div>
+                <div class="col-md-6" style="float:left; text-align:right;">
+                    <button type="reset">Clear</button>
+                </div>
+            </div>
+        </div>
+    </article>
+</form>
+
+{% endblock content %}

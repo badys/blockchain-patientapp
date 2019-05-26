@@ -28,11 +28,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarToggle">
           <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="/">Home</a>
             <a class="nav-item nav-link" href="/about">About</a>
           </div>
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/">Patient list</a>
-            <a class="nav-item nav-link" href="/add">Add patient</a>
+            <a class="nav-item nav-link" href="/doctor/add">Add Doctor</a>
+            <a class="nav-item nav-link" href="/patient/add">Register patient</a>
           </div>
         </div>
       </div>
@@ -43,6 +44,7 @@
       <div class="col-md-10" style="margin: auto;">
         {% block content %}{% endblock %}
       </div>
+        {% block list %}{% endblock %}
     </div>
   </main>
 </body>

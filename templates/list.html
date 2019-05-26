@@ -1,23 +1,47 @@
 {% extends "layout.html" %}
 
-{% block content %}
-{% for patient in patients %}
+{% block list %}
 
-<article class="media content-section">
-    <div class="media-body">
-        <div class="article-metadata">
-            <small class="text-muted">Last modified: {{ patient.date_modified }}</small>
+<div class="col-md-6">
+    <h1>Patients</h1>
+    {% for patient in patients %}
+
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <small class="text-muted">In hospital: {{ 'Yes' if patient.inHospital else 'No' }}</small>
+            </div>
+            <h2>
+                <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ patient.wallet }}">{{patient.firstname}} {{ patient.lastname }}</a>
+            </h2>
+            <div id="data{{ patient.wallet }}" class="collapse">
+                <p class="article-content">Pesel: {{ patient.pesel }} </p>
+                {% for res in residances %}
+                <div class="article-metadata">
+                    <small class="text-muted"></small>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        <h2>
-            <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ patient.id }}">{{ patient.name }} {{ patient.surname }}</a>
-            <a href="edit?id={{ patient.id }}" class="fas fa-edit" style="float: right;"></a>
-        </h2>
-        <div id="data{{ patient.id }}" class="collapse">
-            <p class="article-content">Pesel: {{ patient.pesel }} </p>
-            <p class="article-content">Date of admission: {{ patient.date_admission }}</p>
-            <p class="article-content">Doctors prescription: {{ patient.info }}</p>
+    </article>
+    {% endfor %}
+</div>
+
+<div class="col-md-6">
+    <h1>Doctors</h1>
+    {% for doctor in doctors %}
+
+    <article class="media content-section">
+        <div class="media-body">
+            <h2>
+                <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ doctor.wallet }}">{{doctor.firstname
+                    }} {{ doctor.lastname }}</a>
+            </h2>
+            <div id="data{{ doctor.wallet }}" class="collapse">
+                <p class="article-content">NPWZ: {{ doctor.doctorNPWZ }} </p>
+            </div>
         </div>
-    </div>
-</article>
-{% endfor %}
-{% endblock content %}
+    </article>
+    {% endfor %}
+</div>
+{% endblock list %}
