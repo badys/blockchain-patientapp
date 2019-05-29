@@ -10,4 +10,4 @@ Genesis.json is descriptor of genesis block for this blockchain network and has 
 `geth --datadir datadir init genesis.json`
 
 ### Start command:
-`geth --datadir datadir --bootnodes enode://e85024e6d15fe94372e77356e66f3866e80e8a96b67be54ceeeec3388d5e5654e4514b4c14ef43d1f11fdd281ab8aa5ab5e5581ebdb30f3f0dd78b99b90b3ab0@40.68.74.219:30303 --networkid 101010101 console`
+`geth --datadir datadir --bootnodes enode://eaba0a6354c4d36377ba0e7b80886644e27d532da3b98ece22a1858f7bcc3c90bb40063eafe23c6b895cd964c736832e1340f1da506c771d732d93480b3e3968@40.68.74.219:30303 --networkid 101010101 console`
