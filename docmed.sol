@@ -29,7 +29,7 @@ contract DocMed
         string pesel;
         string name;
         string lastName;
-        int residancesNo;
+        uint residancesNo;
         HospitalResidance[] residances;
         bool inHospital;
     }
@@ -118,5 +118,31 @@ contract DocMed
     function getPatientsNo() public view returns(uint)
     {
         return patientIds.length;
+    }
+
+    function getPatientResidanceVisitsNo(address _patient, uint _index) public view returns(uint)
+    {
+        Patient storage p = patients[_patient];
+        require(_index < p.residancesNo);
+        return p.residances[_index].visitsNo;
+    }
+
+    function getPatientResidanceVisitInfo(address _patient, uint _residanceIndex, uint _visitIndex) public view returns(address, uint, string memory)
+    {
+        Patient storage p = patients[_patient];
+        require(_residanceIndex < p.residancesNo);
+        HospitalResidance storage hr = p.residances[_residanceIndex];
+        require(_visitIndex < hr.visitsNo);
+        Visit storage v = hr.visits[_visitIndex];
+        return (v.doctor, v.timestamp, v.doctorRecommendations);
+    }
+
+    function endResidance(address _patient) public
+    {
+        require(patientExists(_patient));
+        require(doctorExists(msg.sender));
+        Patient storage p = patients[_patient];
+        require(p.inHospital);
+        p.inHospital = false;
     }
 }
