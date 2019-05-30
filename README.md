@@ -14,7 +14,7 @@ Genesis.json is descriptor of genesis block for this blockchain network and has 
 
 # Local test
 ### geth
-Start geth using 'geth --dev console --rpc --rpcapi="db,eth,net,web3,personal,web3"'
+Start geth using `geth --dev console --rpc --rpcapi="db,eth,net,web3,personal,web3"`
 Be sure to check if HTTP endpoint from geth matches address in both compile.py and app.py
 
 ### Start
