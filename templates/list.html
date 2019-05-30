@@ -9,18 +9,37 @@
     <article class="media content-section">
         <div class="media-body">
             <div class="article-metadata">
-                <small class="text-muted">In hospital: {{ 'Yes' if patient.inHospital else 'No' }}</small>
+                <small class="text-muted">In hospital: {{ 'Yes' if patient.inHospital else 'No' }} <i
+                        class="fas fa-stethoscope"></i></small>
             </div>
             <h2>
-                <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ patient.wallet }}">{{patient.firstname}} {{ patient.lastname }}</a>
+                <a href="#" class="article-title" data-toggle="collapse" data-target="#pat{{ patient.wallet }}">{{patient.firstname}}
+                    {{ patient.lastname }}</a>
             </h2>
-            <div id="data{{ patient.wallet }}" class="collapse">
+            <div id="pat{{ patient.wallet }}" class="collapse">
                 <p class="article-content">Pesel: {{ patient.pesel }} </p>
-                {% for res in residances %}
+                {% if patient.inHospital %}
+                <a href="#" data-toggle="modal" data-target="#endVisitId" style="float: left;"
+                   onclick="openModalEndVisit('{{patient.wallet}}', '{{patient.firstname}}', '{{patient.lastname}}' )">End Visit&nbsp;<i
+                        class="far fa-calendar-times"></i></a>
+                {% endif %}
+                {% if doctors %}
+                <a href="#" data-toggle="modal" data-target="#addVisitId" style="float: right;"
+                   onclick="openModalAddVisit('{{patient.wallet}}', '{{patient.firstname}}', '{{patient.lastname}}' )">Add Visit&nbsp;<i
+                        class="far fa-id-badge"></i></a>
+                {% endif %}
+                <div style="margin-top: 50px;">
+                {% for res in patient.residances %}
                 <div class="article-metadata">
-                    <small class="text-muted"></small>
+                    <small class="text-muted">Residance nr. {{res.resNo}}</small>
                 </div>
+                    {% for v in res.visits %}
+                    <p class="article-content" style="font-weight:bold;">Visit nr. {{ v.visitNo }}, Date: {{ v.date }}</p>
+                    <p class="article-content">Doctor: {{ v.doc }}</p>
+                    <p class="article-content">Recommendations: {{ v.recommendation }}</p>
+                    {% endfor %}
                 {% endfor %}
+                    </div>
             </div>
         </div>
     </article>
@@ -34,10 +53,10 @@
     <article class="media content-section">
         <div class="media-body">
             <h2>
-                <a href="#" class="article-title" data-toggle="collapse" data-target="#data{{ doctor.wallet }}">{{doctor.firstname
+                <a href="#" class="article-title" data-toggle="collapse" data-target="#doc{{ doctor.wallet }}">{{doctor.firstname
                     }} {{ doctor.lastname }}</a>
             </h2>
-            <div id="data{{ doctor.wallet }}" class="collapse">
+            <div id="doc{{ doctor.wallet }}" class="collapse">
                 <p class="article-content">NPWZ: {{ doctor.doctorNPWZ }} </p>
             </div>
         </div>

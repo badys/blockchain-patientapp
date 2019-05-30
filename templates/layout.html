@@ -2,51 +2,138 @@
 <html>
 
 <head>
-  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
-  {% if title %}
-  <title>Patient App - {{ title }}</title>
-  {% else %}
-  <title>Patient App</title>
-  {% endif %}
+    {% if title %}
+    <title>Patient App - {{ title }}</title>
+    {% else %}
+    <title>Patient App</title>
+    {% endif %}
 </head>
 
 <body>
-  <header class="site-header">
+<header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-      <div class="container">
-        <a class="navbar-brand mr-4" href="/">Patient App</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarToggle">
-          <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="/">Home</a>
-            <a class="nav-item nav-link" href="/about">About</a>
-          </div>
-          <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/doctor/add">Add Doctor</a>
-            <a class="nav-item nav-link" href="/patient/add">Register patient</a>
-          </div>
+        <div class="container">
+            <a class="navbar-brand mr-4" href="/">Patient App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="/">Home</a>
+                    <a class="nav-item nav-link" href="/about">About</a>
+                    <a class="nav-item nav-link" href="#" onclick="refillAccounts()">Refill Accounts</a>
+                </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/doctor/add">Add Doctor</a>
+                    <a class="nav-item nav-link" href="/patient/add">Register patient</a>
+                </div>
+            </div>
         </div>
-      </div>
     </nav>
-  </header>
-  <main role="main" class="container">
+</header>
+<main role="main" class="container">
     <div class="row">
-      <div class="col-md-10" style="margin: auto;">
-        {% block content %}{% endblock %}
-      </div>
+        <div class="col-md-10" style="margin: auto;">
+            {% block content %}{% endblock %}
+        </div>
         {% block list %}{% endblock %}
     </div>
-  </main>
+</main>
+
+<form action="/patient/addVisit" method="POST">
+    <input type="hidden" name="patientWallet" id="patientWalletId" value="walId"/>
+    <!-- Modal -->
+    <div id="addVisitId" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title"></h4>
+                    <button type="button" class="close" style="float:right;" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recommendations">Recommendations:</label>
+                        <textarea class="form-control" rows="5" id="recommendations" name="recommendations"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="doctor">Select doctor from list:</label>
+                        <select class="form-control" id="doctor" name="doctor">
+                            {% for doctor in doctors %}
+                            <option value="{{doctor.wallet}}">{{doctor.firstname }} {{ doctor.lastname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Add Visit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<form action="/patient/endVisit" method="POST">
+    <input type="hidden" name="patientWallet" id="endVisitWalletId" value="walId"/>
+    <!-- Modal -->
+    <div id="endVisitId" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title-endvisit"></h4>
+                    <button type="button" class="close" style="float:right;" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                     <div class="form-group">
+                        <label for="doctor">Select doctor ending visit:</label>
+                        <select class="form-control" name="doctor">
+                            {% for doctor in doctors %}
+                            <option value="{{doctor.wallet}}">{{doctor.firstname }} {{ doctor.lastname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default">Ok</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+  function openModalAddVisit(wallet, fn, ln) {
+    $("#patientWalletId").val(wallet);
+    $("#modal-title").html("Add visit for " + fn + " " + ln);
+  }
+
+  function openModalEndVisit(wallet, fn, ln) {
+    $("#endVisitWalletId").val(wallet);
+    $("#modal-title-endvisit").html("End visit for " + fn + " " + ln);
+  }
+
+  function refillAccounts() {
+    $.getJSON("http://localhost:5000/refill", function(data){
+    alert(data.message)
+    })
+  }
+
+
+</script>
 </body>
 
 </html>
