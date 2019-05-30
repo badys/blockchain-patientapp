@@ -28,10 +28,25 @@ tx_hash = contract.constructor().transact()
 tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 ADDRESS = tx_receipt['contractAddress']
 
+doctors = []
+patients = []
+password = "qwe123"
+for i in range(5):
+    acc = w3.personal.newAccount(password)
+    doctors.append(acc)
+    w3.personal.unlockAccount(acc, password, 0)
+    print('Created and unlocked Doctor nr %d, address: %s' % (i + 1, acc))
+    acc = w3.personal.newAccount(password)
+    patients.append(acc)
+    w3.personal.unlockAccount(acc, password, 0)
+    print('Created and unlocked Patient nr %d, address: %s' % (i + 1, acc))
+
 with open('data.json', 'w') as out:
     data = {
         "abi": ABI,
-        "address": ADDRESS
+        "address": ADDRESS,
+        "doctors": doctors,
+        "patients": patients
     }
     json.dump(data, out, indent=4, sort_keys=True)
 print('Contract compiled')
